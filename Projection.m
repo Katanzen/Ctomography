@@ -1,6 +1,7 @@
 % image initializition and parameter setting:
 image = ones(4,4);
 image(2,2) = 2;
+numberOfSamples = 1;
 
 %Size of the one dimension assumes matrix is square:
 sizeOfImage = size(image);
@@ -19,7 +20,6 @@ for i=1:detectionSensors
 end
 
 % Testing with 0 degree
-degree = 0;
-projectionArray = degreeToProjection(image, degree, sensorArray, empitySpace, sizeOfImage, detectionSensors);
+projectionArray = degreeToProjection(image, sensorArray, empitySpace, sizeOfImage, detectionSensors, numberOfSamples);
 
 plot(projectionArray);
