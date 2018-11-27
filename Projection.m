@@ -1,6 +1,8 @@
 % image initializition and parameter setting:
 image = ones(4,4);
 image(2,2) = 2;
+% disp(image(2,:));
+% disp(image(:,2));
 numberOfSamples = 2;
 
 %Size of the one dimension assumes matrix is square:

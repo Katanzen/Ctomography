@@ -11,76 +11,72 @@ function arrayOf = degreeToProjection(image, sensorArray, empitySpace, sizeOfIma
     % İnitializin required variables:
     arrayOf=zeros(numberOfSamples,detectionSensors); %initializing the return array.
     degreeStart = 0;
-    
     distanceBetweenSensorLines = lengthOfSensorPanel / detectionSensors; %Distance between the sensor lines.
-    % slopeOfTheLineS = tand(degree);
-    originPoint = lengthOfSensorPanel*sqrt(2)/2;
-    % originPoint = originPoint / 2;
+    originPoint = lengthOfSensorPanel/2;
+    distanceFromOrigin = zeros(0, detectionSensors);
+
     degreeJump = floor(180/numberOfSamples);
     discretePointsInLines = 100;
     projectionLinesLength = sizeOfImage*sqrt(2);
     discrete_point_jump = projectionLinesLength / discretePointsInLines;
     line_array = initializeLineArray();
+    constPointsLinesForZero = zeros(2, detectionSensors);
     % Constant points of the lines are initialized in a two dimensional matrix
     % First row contains x posiitions second row contains y positions of the lines:
 
 
+
     % Constant x points for 0 degree
-    for degree = 0:degreeJump:0
+    lineArray = initializeLineArray();
+
+    for degree = 0:11:89
         referencePoints = findConstPointLines(degree);
-        disp(referencePoints);
     end
 
-
-    % TODO initialize array points but first you need to find the new reference points of the lines
     function line_array = initializeLineArray()
-        double point;
-        line_array = zeros(1, discretePointsInLines);
-        for j = 1:discretePointsInLines
-            point = j * discrete_point_jump;
-            line_array(1, j) = point;
-            
-        end   
+        line_array = linspace(-originPoint, originPoint, 100);
     end
 
     function returnArray = findConstPointLines(degree)
+        new_refence_points = zeros(2, detectionSensors);
         if(degree == 0)
-            constPointsLines = zeros(2, detectionSensors);
 
-            %       TODO             
-            %       İnitialize the array sensor lines reference points according to the degree.
+            for o = 1:detectionSensors  
+                if(((o-1) * distanceBetweenSensorLines) < originPoint)
 
-            returnArray = constPointsLines;
+                    constPointsLinesForZero(1,o) = originPoint - (o-1)*distanceBetweenSensorLines;
+                    distanceFromOrigin(o) = (constPointsLinesForZero(1, o));
+                else
+                    constPointsLinesForZero(1, o) = originPoint - (o-1)*distanceBetweenSensorLines;
+                    distanceFromOrigin(o) = (constPointsLinesForZero(1, o));
+
+                end
+                constPointsLinesForZero(2,o) = 0;
+            end
+
+            returnArray = constPointsLinesForZero;
         end
+
+        if(degree>=1 && degree<90)
+            for p = 1: detectionSensors
+                [new_refence_points(1, p), new_refence_points(2,p)] = calculate_new_reference_points(degree, p);
+                returnArray =  new_refence_points;
+            end
+        end
+                
     end
 
+    
+    function [newArrayOfReferences1, newArrayOfReferences2] = calculate_new_reference_points(takeDegree, index)
+        newArrayOfReferences1 =  distanceFromOrigin(index) * cosd(takeDegree);
+        newArrayOfReferences2 = -distanceFromOrigin(index) * sind(takeDegree);
 
-    % disp(xPositionsLines);
+    end
 end
 
 
-% for i = 1:detectionSensors
-%     % disp(i);
-% xPosition = constPointsLines(1, i);
-% yPosition = constPointsLines(2, i);
-
-% % disp(xPosition);
-
-% if(xPosition<originPoint)
-%     % disp(xPosition);
-%     xPosition = originPoint - xPosition;
-%     if(xPosition<0.0001)
-%         xPosition = 0;
-%     end
-%     % x1 = xPosition - yPosition -slope;
-%     % disp(xPosition);
-
-% else
-%     xPosition = -1*(xPosition - originPoint);
-%     % x1 = xPosition - yPosition -slope;
-%     if(xPosition<0.0001 && xPosition> - 0.00001)
-%         xPosition = 0;
-%     end
-%     % disp(xPosition);
-% end
-% constPointsLines(1,i) = xPosition;
+% 
+% 
+%  NİCEEE ARRAY CONST POİNTS ARE A GO, NOW FİND THE INTERSECTİON WİTH THE MATRİX
+% 
+% 
