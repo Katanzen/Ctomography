@@ -1,4 +1,4 @@
-function arrayOf = degreeToProjection(image, sensorArray, empitySpace, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel)
+function arrayOf = degreeToProjection(image, sensorArray, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel,numberOfSamplesOnLines)
 
 
     %myFun - Description
@@ -19,7 +19,6 @@ function arrayOf = degreeToProjection(image, sensorArray, empitySpace, sizeOfIma
     discretePointsInLines = 100;
     projectionLinesLength = sizeOfImage*sqrt(2);
     discrete_point_jump = projectionLinesLength / discretePointsInLines;
-    line_array = initializeLineArray();
     constPointsLinesForZero = zeros(2, detectionSensors);
     % Constant points of the lines are initialized in a two dimensional matrix
     % First row contains x posiitions second row contains y positions of the lines:
@@ -27,15 +26,13 @@ function arrayOf = degreeToProjection(image, sensorArray, empitySpace, sizeOfIma
 
 
     % Constant x points for 0 degree
-    lineArray = initializeLineArray();
-
-    for degree = 0:11:89
+    for degree = 0:10:89
         referencePoints = findConstPointLines(degree);
+        projection = calculateProjection(image, referencePoints, degree, numberOfSamplesOnLines, detectionSensors, projectionLinesLength, originPoint);
+        figure
+        plot(projection);
     end
 
-    function line_array = initializeLineArray()
-        line_array = linspace(-originPoint, originPoint, 100);
-    end
 
     function returnArray = findConstPointLines(degree)
         new_refence_points = zeros(2, detectionSensors);
@@ -72,11 +69,13 @@ function arrayOf = degreeToProjection(image, sensorArray, empitySpace, sizeOfIma
         newArrayOfReferences2 = -distanceFromOrigin(index) * sind(takeDegree);
 
     end
+    % disp(distanceFromOrigin);
+
 end
 
 
 % 
 % 
-%  NİCEEE ARRAY CONST POİNTS ARE A GO, NOW FİND THE INTERSECTİON WİTH THE MATRİX
+%  FORWARD PROBLEM IS ALMOST OVER FINISH THE 90 DEGREES AND AFTER
 % 
 % 
