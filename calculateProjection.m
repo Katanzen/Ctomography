@@ -1,4 +1,4 @@
-function outputMatrix = myFun(image, reference_points, degree, samples, numberofdetectors, linelength, originPoint)
+function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degree, samples, numberofdetectors, linelength, originPoint, numberOfSamples)
 %myFun - Description
 %
 % Syntax: output = myFun(input)
@@ -10,7 +10,8 @@ function outputMatrix = myFun(image, reference_points, degree, samples, numberof
   samplejump = linelength / samples;
   samplearray = linspace(-originPoint, originPoint, 100);
   numberofhits = 0;
-
+  numberOfHitArray = zeros(1 , numberofdetectors);
+  halfTheImageSize = imagesize;
 
   data = 0;
 
@@ -19,55 +20,57 @@ function outputMatrix = myFun(image, reference_points, degree, samples, numberof
       [xpoint, ypoint] = find_point_cordinates(reference_points(1, k), reference_points(2, k), samplearray(i), degree);
        attenuation = calculateProjectionData(xpoint, ypoint);
     end
-    if(numberofhits ~= 0)
-      attenuation = attenuation / numberofhits;
-    else
-      attenuation = 0;
-    end
+    % disp(degree);
+    % disp(numberofhits);
+    numberOfHitArray(1,k) = numberofhits;
+    %  NUMBER OF HİTS
+    % if(numberofhits ~= 0)
+    %   attenuation = attenuation / numberofhits;
+    % else
+    %   attenuation = 0;
+    % end
+    numberofhits = 0;
+
     outputMatrix(k, 1) = attenuation;
     data = 0;
-    numberofhits = 0;
-    disp(degree);
+    % disp(degree);
 
   end
+  % disp(numberOfHitArray);
   % plot(outputMatrix);
-
-  function [x, y] = find_point_cordinates(constX, constY, distance, degree)
-    if(degree == 0)
-      x = constX;
-      y = constY + distance;
-    end
-    if(degree>0)
-      if(distance < 0)
-        x = (constX - distance*sind(degree));
-        y = (constY - distance*cosd(degree));
-      else
-        x = (constX + distance*sind(degree));
-        y = (constY + distance*cosd(degree));
-      end        
-      
-    end
-  end 
-
-  
-  
-
 
   function pdata = calculateProjectionData(xpoint_line, ypoint_line)
     if(xpoint_line > -imagesize && xpoint_line < imagesize && ypoint_line > -imagesize && ypoint_line <imagesize)
+      % NUMBER OF HİTS AGAİN
       numberofhits = numberofhits + 1;
+      % if(xpoint_line < 0)
+      %   floredx = 2 + ceil(xpoint_line);
+      % else
+      %   floredx = 2 + floor(xpoint_line);
+      % end
+
+      % if(ypoint_line < 0)
+      %   floredy = 2 + ceil(ypoint_line);
+      % else 
+      %   floredy = 2 + floor(ypoint_line);        
+      % end
       if(xpoint_line < 0)
-        floredx = 2 + ceil(xpoint_line);
+        floredx = halfTheImageSize - floor(xpoint_line);
       else
-        floredx = 2 + floor(xpoint_line);
+        floredx = halfTheImageSize - floor(xpoint_line);
       end
 
       if(ypoint_line < 0)
-        floredy = 2 + ceil(ypoint_line);
+        floredy = halfTheImageSize + ceil(ypoint_line);
       else 
-        floredy = 2 + floor(ypoint_line);        
+        floredy = halfTheImageSize + ceil(ypoint_line);        
       end
+      % disp(halfTheImageSize);
+      % disp(xpoint_line);
+      % disp(ypoint_line);
+
       % disp(floredy);
+      % disp(floredx);
       data = data + image(floredx, floredy);
 
     else

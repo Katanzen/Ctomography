@@ -15,14 +15,14 @@ sizeOfImage = sizeOfImage(1);
 detectionSensors = 10;
 lengthOfSensorPanel = sizeOfImage * sqrt(2);
 lengthBetweenSensors = lengthOfSensorPanel / detectionSensors;
-sensorArray = (detectionSensors);
 
-%Setting the place of the sensors on the sensorpanel
-for i=1:detectionSensors
-    sensorArray(i) = lengthBetweenSensors*(i); 
-end
-
-% Testing with 0 degree
-projectionArray = degreeToProjection(image, sensorArray, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel, numberOfSamplesOnLines);
+[projectionArray, backProjectedImage] = degreeToProjection(image, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel, numberOfSamplesOnLines);
+% figure;
+% disp(projectionArray);
+disp(image);
+% plot(image);
+% figure;
+disp(backProjectedImage);
+% plot(backProjectedImage);
 
 % plot(projectionArray);

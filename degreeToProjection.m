@@ -1,4 +1,4 @@
-function arrayOf = degreeToProjection(image, sensorArray, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel,numberOfSamplesOnLines)
+function [arrayOf, backProjectedImageRe] = degreeToProjection(image, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel,numberOfSamplesOnLines)
 
 
     %myFun - Description
@@ -9,29 +9,44 @@ function arrayOf = degreeToProjection(image, sensorArray, sizeOfImage, detection
     % with m = (y-y1)/(x-x1); and tand(degree)
 
     % İnitializin required variables:
-    arrayOf=zeros(numberOfSamples,detectionSensors); %initializing the return array.
-    degreeStart = 0;
+    % arrayOf=zeros(numberOfSamples,detectionSensors); %initializing the return array.
     distanceBetweenSensorLines = lengthOfSensorPanel / detectionSensors; %Distance between the sensor lines.
     originPoint = lengthOfSensorPanel/2;
     distanceFromOrigin = zeros(0, detectionSensors);
+    % backProjectedImageRe = zeros(sizeOfImage, sizeOfImage);
 
     degreeJump = floor(180/numberOfSamples);
     discretePointsInLines = 100;
     projectionLinesLength = sizeOfImage*sqrt(2);
     discrete_point_jump = projectionLinesLength / discretePointsInLines;
     constPointsLinesForZero = zeros(2, detectionSensors);
+    projectiondata = ones(detectionSensors, numberOfSamples);
     % Constant points of the lines are initialized in a two dimensional matrix
     % First row contains x posiitions second row contains y positions of the lines:
 
 
 
     % Constant x points for 0 degree
-    for degree = 0:10:89
+    indexForProjectionData = 1;
+    backProjectedImage = zeros(sizeOfImage, sizeOfImage);
+    for degree = 0:degreeJump:179
+        % disp(degree);
         referencePoints = findConstPointLines(degree);
-        projection = calculateProjection(image, referencePoints, degree, numberOfSamplesOnLines, detectionSensors, projectionLinesLength, originPoint);
-        figure
-        plot(projection);
+        [projectiondata(:,indexForProjectionData), numberOfHitArray] = calculateProjection(image, referencePoints, degree, numberOfSamplesOnLines, detectionSensors, projectionLinesLength, originPoint, numberOfSamples);
+        % figure
+        % plot(projectiondata);
+        % disp(degree);
+        % disp(projection);
+        % disp(numberOfHitArray);
+        % disp(-6 * distanceBetweenSensorLines + originPoint);
+        backProjectedImageRe = Backprojection(backProjectedImage, sizeOfImage, projectiondata, numberOfSamples, numberOfSamplesOnLines, detectionSensors, degree, numberOfHitArray, referencePoints, originPoint, indexForProjectionData);
+        indexForProjectionData = indexForProjectionData + 1;
+
     end
+    
+    arrayOf = projectiondata;
+
+
 
 
     function returnArray = findConstPointLines(degree)
@@ -54,7 +69,7 @@ function arrayOf = degreeToProjection(image, sensorArray, sizeOfImage, detection
             returnArray = constPointsLinesForZero;
         end
 
-        if(degree>=1 && degree<90)
+        if(degree>=1 && degree<180)
             for p = 1: detectionSensors
                 [new_refence_points(1, p), new_refence_points(2,p)] = calculate_new_reference_points(degree, p);
                 returnArray =  new_refence_points;
@@ -76,6 +91,6 @@ end
 
 % 
 % 
-%  FORWARD PROBLEM IS ALMOST OVER FINISH THE 90 DEGREES AND AFTER
+%  FORWARD PROBLEM İS OVER NİCEE
 % 
 % 
