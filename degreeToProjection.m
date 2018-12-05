@@ -1,6 +1,4 @@
 function [arrayOf, backProjectedImageRe] = degreeToProjection(image, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel,numberOfSamplesOnLines)
-
-
     %myFun - Description
     % Takes degree and image outputs the projection
     % Syntax: array = degreeToProjection(image, degree)
@@ -39,8 +37,11 @@ function [arrayOf, backProjectedImageRe] = degreeToProjection(image, sizeOfImage
         % disp(projection);
         % disp(numberOfHitArray);
         % disp(-6 * distanceBetweenSensorLines + originPoint);
-        backProjectedImageRe = Backprojection(backProjectedImage, sizeOfImage, projectiondata, numberOfSamples, numberOfSamplesOnLines, detectionSensors, degree, numberOfHitArray, referencePoints, originPoint, indexForProjectionData);
+%         disp(degree);
+        backProjectedImage = Backprojection(backProjectedImage, sizeOfImage, projectiondata, numberOfSamples, numberOfSamplesOnLines, detectionSensors, degree, numberOfHitArray, referencePoints, originPoint, indexForProjectionData);
         indexForProjectionData = indexForProjectionData + 1;
+        backProjectedImageRe = backProjectedImage;
+%         disp(backProjectedImage);
 
     end
     
@@ -69,20 +70,36 @@ function [arrayOf, backProjectedImageRe] = degreeToProjection(image, sizeOfImage
             returnArray = constPointsLinesForZero;
         end
 
-        if(degree>=1 && degree<180)
+        if(degree>=1 && degree<91)
             for p = 1: detectionSensors
                 [new_refence_points(1, p), new_refence_points(2,p)] = calculate_new_reference_points(degree, p);
                 returnArray =  new_refence_points;
+%                 disp(new_refence_points);
             end
+        end
+        
+        if(degree > 90)
+             for p = 1: detectionSensors
+                [new_refence_points(1, p), new_refence_points(2,p)] = calculate_new_reference_points(degree, p);
+                returnArray =  new_refence_points;
+%                 disp(new_refence_points);
+             end
         end
                 
     end
 
     
     function [newArrayOfReferences1, newArrayOfReferences2] = calculate_new_reference_points(takeDegree, index)
+        if(degree <= 90)
         newArrayOfReferences1 =  distanceFromOrigin(index) * cosd(takeDegree);
         newArrayOfReferences2 = -distanceFromOrigin(index) * sind(takeDegree);
-
+        end
+        if(degree>90)
+%             disp(distanceFromOrigin(index));
+            newArrayOfReferences1 = -distanceFromOrigin(index) * cosd(180-takeDegree);
+            newArrayOfReferences2 = -distanceFromOrigin(index) * sind(180-takeDegree);
+%             disp(newArrayOfReferences1);
+        end
     end
     % disp(distanceFromOrigin);
 

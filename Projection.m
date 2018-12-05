@@ -1,9 +1,11 @@
 % image initializition and parameter setting:
+clc;
+clear;
 image = ones(4,4);
-image(2,2) = 2;
+image(4,1) = 2;
 % disp(image(2,:));
 % disp(image(:,2));
-numberOfSamples = 2;
+numberOfSamples = 180;
 numberOfSamplesOnLines = 100;
 
 
@@ -18,11 +20,17 @@ lengthBetweenSensors = lengthOfSensorPanel / detectionSensors;
 
 [projectionArray, backProjectedImage] = degreeToProjection(image, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel, numberOfSamplesOnLines);
 % figure;
-% disp(projectionArray);
+disp(projectionArray);
 disp(image);
 % plot(image);
 % figure;
 disp(backProjectedImage);
 % plot(backProjectedImage);
-
-% plot(projectionArray);
+% 
+% plot(projectionArray(:,1));
+% figure;
+% plot(projectionArray(:,2));
+% figure;
+% plot(projectionArray(:,3));
+% figure;
+% plot(projectionArray(:,4));

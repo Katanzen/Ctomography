@@ -4,7 +4,7 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
 % Syntax: output = myFun(input)
 %
 % Long description
-
+%    disp(originPoint);
   imagesize = originPoint/sqrt(2);
   outputMatrix = zeros(numberofdetectors, 1);
   samplejump = linelength / samples;
@@ -12,23 +12,37 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
   numberofhits = 0;
   numberOfHitArray = zeros(1 , numberofdetectors);
   halfTheImageSize = imagesize;
-
   data = 0;
-
   for k = 1:numberofdetectors
+%       if(degree==45)
+%             disp(reference_points(1,k));
+%             disp(reference_points(2,k));
+%             disp(xpoint);
+%             disp("+++++++");
+%             disp(ypoint);
+%         end
     for i = 1:samples
       [xpoint, ypoint] = find_point_cordinates(reference_points(1, k), reference_points(2, k), samplearray(i), degree);
        attenuation = calculateProjectionData(xpoint, ypoint);
+%         if(degree==45 && k==1)
+% %             disp(reference_points(1,k));
+% %             disp(reference_points(2,k));
+%             disp(xpoint);
+%             disp("+++++++");
+%             disp(ypoint);
+%             disp("+++++++");
+%             disp(attenuation);
+%             disp("END");
+%         end
     end
-    % disp(degree);
-    % disp(numberofhits);
     numberOfHitArray(1,k) = numberofhits;
-    %  NUMBER OF HİTS
-    % if(numberofhits ~= 0)
-    %   attenuation = attenuation / numberofhits;
-    % else
-    %   attenuation = 0;
-    % end
+
+    %  NUMBER OF HITS
+    if(numberofhits ~= 0)
+      attenuation = (attenuation / numberofhits)*(imagesize*2*sqrt(2)* (numberofhits/100));
+    else
+      attenuation = 0;
+    end
     numberofhits = 0;
 
     outputMatrix(k, 1) = attenuation;
@@ -36,24 +50,11 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
     % disp(degree);
 
   end
-  % disp(numberOfHitArray);
-  % plot(outputMatrix);
 
   function pdata = calculateProjectionData(xpoint_line, ypoint_line)
     if(xpoint_line > -imagesize && xpoint_line < imagesize && ypoint_line > -imagesize && ypoint_line <imagesize)
-      % NUMBER OF HİTS AGAİN
-      numberofhits = numberofhits + 1;
-      % if(xpoint_line < 0)
-      %   floredx = 2 + ceil(xpoint_line);
-      % else
-      %   floredx = 2 + floor(xpoint_line);
-      % end
 
-      % if(ypoint_line < 0)
-      %   floredy = 2 + ceil(ypoint_line);
-      % else 
-      %   floredy = 2 + floor(ypoint_line);        
-      % end
+      numberofhits = numberofhits + 1;
       if(xpoint_line < 0)
         floredx = halfTheImageSize - floor(xpoint_line);
       else
@@ -65,12 +66,6 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
       else 
         floredy = halfTheImageSize + ceil(ypoint_line);        
       end
-      % disp(halfTheImageSize);
-      % disp(xpoint_line);
-      % disp(ypoint_line);
-
-      % disp(floredy);
-      % disp(floredx);
       data = data + image(floredx, floredy);
 
     else
@@ -78,8 +73,5 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
     end
     pdata = data;
   end
-
-
-
 
 end
