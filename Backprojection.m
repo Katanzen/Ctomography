@@ -1,5 +1,5 @@
 % 
-% 0 degree is okay look at the others
+%  Takes projection data as input and outputs backprojection data.
 % 
 function backProjectedImageRe = Backprojection(backProjectedImage, imagesizeR, projectionData, numberOfSamples, numberOfSamplesOnRays, numberofdetectors, degree, numberOfHitArray, reference_points, originPoint, indexForProjectionData)
   
@@ -14,27 +14,52 @@ function backProjectedImageRe = Backprojection(backProjectedImage, imagesizeR, p
     % disp(numberOfHitArray(1,k));
     numberOfHitsToSend = numberOfHitArray(1,k);
     % disp(numberOfHitsToSend);
+    floredxC = -10;
+    floredyC = -10;
+    xCounter = 0;
+    yCounter = 0;
     for i = 1:numberOfSamplesOnRays
       [xpoint, ypoint] = find_point_cordinates(reference_points(1, k), reference_points(2, k), samplearray(i), degree);
       calculateBackProjectionData(xpoint, ypoint, numberOfHitsToSend, k);
+%       if(xpoint > -halfTheImageSize && xpoint< halfTheImageSize && ypoint > -halfTheImageSize && ypoint <halfTheImageSize)
+%           if(floredxC == floredx)
+%               xCounter = xCounter + 1;
+%           else
+%               disp(xCounter);
+%               backProjectedImage(floredx, floredy) = backProjectedImage(floredx, floredy) / xCounter+1; 
+%               floredxC = floredx;
+%               xCounter = 1;
+%               yCounter = 1;
+%           end
+%           if(floredyC == floredy)
+%               yCounter = yCounter + 1;
+%           else
+%               disp(yCounter);
+%               backProjectedImage(floredx, floredy) = backProjectedImage(floredx, floredy) / xCounter+1;
+%               floredyC = floredy;
+%               yCounter = 1;
+%               xCounter = 1;
+%           end
+         
+      end
+%       if(k==4 && degree==45)
+%         disp("++++++++++++++++");
+%         disp(xpoint);
+%         disp("++++++++++++++++");
+%         disp(ypoint);
+%         disp("++++++++++++++++");
+%         disp(xCounter);
+%         disp(yCounter);
+%       end
+      
     end
-    
-%     disp(floredxRe);
-%     if(degree ~= 0 && floredxRe~=0 && floredyRE ~= 0)
-%        backProjectedImage(floredxRe, floredyRE) = backProjectedImage(floredxRe, floredyRE) / numberOfHits;
-%         % backProjectedImage(floredx, floredy) = 0;
-%         print(numberOfHits);
-%     end
-  end
+
+ 
 
     function calculateBackProjectionData(xpoint_line, ypoint_line, numberOfHits, index)
-%     floredx = 0;
-%     floredy = 0;
     
     if(xpoint_line > -halfTheImageSize && xpoint_line < halfTheImageSize && ypoint_line > -halfTheImageSize && ypoint_line <halfTheImageSize)
-      % disp(floor(xpoint_line));
-      % disp(ypoint_line);
-      % NUMBER OF HİTS AGAİN
+
       if(xpoint_line < 0)
         floredx = halfTheImageSize - floor(xpoint_line);
       else
@@ -46,39 +71,21 @@ function backProjectedImageRe = Backprojection(backProjectedImage, imagesizeR, p
       else 
         floredy = halfTheImageSize + ceil(ypoint_line);        
       end
-%       floredx = floredx;
-%       floredy = floredy;
-      % if(floredx < originPoint)
-      % disp(backProjectedImage(floredx, floredy));
-      % disp(projectionData(floredx, floredy)/numberOfHits);
-      % disp(numberOfHits);
-      % if(numberOfHits == 0)
-      %   disp(xpoint_line);
-      %   disp(ypoint_line);
 
-      % else
-      % disp(floredx);
       if(degree == 0)
-%           disp("it is here");
+
         backProjectedImage(floredx, floredy) =(projectionData(index, indexForProjectionData)/(imagesizeR*sqrt(2)*(numberOfHits/100)));
-%         disp(numberOfHits);
+
       else
-        % temp = degree;
-          % disp("lala");
-          % disp(floredx);
-          % disp("kaka");
-          % disp(floredy);
-          % disp("data");
-          % disp((projectionData(index, indexForProjectionData)/numberOfHits));
-          % disp(floredy);
-          backProjectedImage(floredx, floredy) = backProjectedImage(floredx, floredy)+ projectionData(index, indexForProjectionData)/(numberOfHits*(imagesizeR*sqrt(2)*numberOfHits/100));
+
+          backProjectedImage(floredx, floredy) = backProjectedImage(floredx, floredy)+ projectionData(index, indexForProjectionData)/((imagesizeR*sqrt(2)*numberOfHits/100));
         % end
       end
 
     end
     % pdata = data; And here
-  end
+      backProjectedImageRe = backProjectedImage;
+    end
 
-  backProjectedImageRe = backProjectedImage;
-%   disp(imagesizeR);
 end
+%   disp(imagesizeR);

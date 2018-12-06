@@ -1,5 +1,5 @@
 % 
-%  FİNDS THE CORDİNATES OF THE POİNTS ON X_RAY BEAMS
+%  Finds The Cordinates of the points on x-ray lines.
 % 
 function [x, y] = find_point_cordinates(constX, constY, distance, degree)
   if(degree == 0)

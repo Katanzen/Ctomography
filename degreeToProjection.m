@@ -6,7 +6,7 @@ function [arrayOf, backProjectedImageRe] = degreeToProjection(image, sizeOfImage
     % TODO: Find the degree And the equation of the every sensor ,
     % with m = (y-y1)/(x-x1); and tand(degree)
 
-    % İnitializin required variables:
+    % Initializition of required variables:
     % arrayOf=zeros(numberOfSamples,detectionSensors); %initializing the return array.
     distanceBetweenSensorLines = lengthOfSensorPanel / detectionSensors; %Distance between the sensor lines.
     originPoint = lengthOfSensorPanel/2;
@@ -108,6 +108,6 @@ end
 
 % 
 % 
-%  FORWARD PROBLEM İS OVER NİCEE
+%  FORWARD PROBLEM IS OVER NICEEE
 % 
 % 

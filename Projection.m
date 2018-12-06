@@ -1,15 +1,13 @@
-% image initializition and parameter setting:
+% Image initializition and parameter setting:
 clc;
 clear;
 image = ones(4,4);
-image(4,1) = 2;
-% disp(image(2,:));
-% disp(image(:,2));
-numberOfSamples = 180;
+image(2,2) = 10;
+numberOfSamples = 179;
 numberOfSamplesOnLines = 100;
 
 
-%Size of the one dimension assumes matrix is square:
+%Size of the one dimension, assumes matrix is square:
 sizeOfImage = size(image);
 sizeOfImage = sizeOfImage(1);
 
@@ -20,10 +18,11 @@ lengthBetweenSensors = lengthOfSensorPanel / detectionSensors;
 
 [projectionArray, backProjectedImage] = degreeToProjection(image, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel, numberOfSamplesOnLines);
 % figure;
-disp(projectionArray);
+% disp(projectionArray);
 disp(image);
 % plot(image);
 % figure;
+backProjectedImage = backProjectedImage /(sizeOfImage*4.150*numberOfSamples * sqrt(2));
 disp(backProjectedImage);
 % plot(backProjectedImage);
 % 
