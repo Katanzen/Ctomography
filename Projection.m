@@ -24,6 +24,11 @@ disp(image);
 % figure;
 backProjectedImage = backProjectedImage /(sizeOfImage*4.150*numberOfSamples * sqrt(2));
 disp(backProjectedImage);
+hpassFilter = ones(3,3);
+hpassFilter(2,2) = 10000;
+disp(hpassFilter);
+disp(conv2(backProjectedImage, hpassFilter, "same")/5);
+% disp(edge(backProjectedImage,"canny"));
 % plot(backProjectedImage);
 % 
 % plot(projectionArray(:,1));
