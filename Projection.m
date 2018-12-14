@@ -3,7 +3,10 @@ clc;
 clear;
 image = ones(4,4);
 image(2,2) = 10;
-numberOfSamples = 179;
+image(2,3) = 10;
+image(3,2) = 10;
+image(3,3) = 10;
+numberOfSamples = 180;
 numberOfSamplesOnLines = 100;
 
 
@@ -16,25 +19,23 @@ detectionSensors = 10;
 lengthOfSensorPanel = sizeOfImage * sqrt(2);
 lengthBetweenSensors = lengthOfSensorPanel / detectionSensors;
 
-[projectionArray, backProjectedImage] = degreeToProjection(image, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel, numberOfSamplesOnLines);
-% figure;
-% disp(projectionArray);
-disp(image);
-% plot(image);
-% figure;
-backProjectedImage = backProjectedImage /(sizeOfImage*4.150*numberOfSamples * sqrt(2));
+[projectionArray, backProjectedImage, filteredBackProjection] = degreeToProjection(image, sizeOfImage, detectionSensors, numberOfSamples, lengthOfSensorPanel, numberOfSamplesOnLines);
+
+
+% backProjectedImage = backProjectedImage /(sizeOfImage* sqrt(2));
 disp(backProjectedImage);
-hpassFilter = ones(3,3);
-hpassFilter(2,2) = 10000;
-disp(hpassFilter);
-disp(conv2(backProjectedImage, hpassFilter, "same")/5);
-% disp(edge(backProjectedImage,"canny"));
-% plot(backProjectedImage);
-% 
-% plot(projectionArray(:,1));
-% figure;
-% plot(projectionArray(:,2));
-% figure;
-% plot(projectionArray(:,3));
-% figure;
-% plot(projectionArray(:,4));
+
+disp((filteredBackProjection));
+figure;
+subplot(2,2,1);
+title("Ýlk foto");
+imagesc(image);
+subplot(2,2,2);
+title("Projection");
+imagesc(projectionArray);
+subplot(2,2,3);
+title("BackProjected Image");
+imagesc(backProjectedImage);
+subplot(2,2,4);
+title("FilteredBackProjection Image");
+imagesc(filteredBackProjection);

@@ -7,7 +7,6 @@ function [x, y] = find_point_cordinates(constX, constY, distance, degree)
     y = constY + distance;
   end
   if(degree == 90)
-%      disp("it is here");
     y = constY;
     x = constX + distance;
   end
@@ -15,7 +14,8 @@ function [x, y] = find_point_cordinates(constX, constY, distance, degree)
     if(distance < 0)
       x = (constX + distance*sind(degree));
       y = (constY + distance*cosd(degree));
-    else
+    end
+    if(distance >0)
       x = (constX + distance*sind(degree));
       y = (constY + distance*cosd(degree));
     end 
@@ -23,12 +23,12 @@ function [x, y] = find_point_cordinates(constX, constY, distance, degree)
   if(degree > 90)
  
     if(distance<0)
-      x = (constX + distance*cosd(180-degree));
-      y = (constY - distance*sind(180-degree));       
+      x = (constX + distance*sind(180-degree));
+      y = (constY - distance*cosd(180-degree));       
     end
     if(distance>0)
-      x = (constX + distance*cosd(180-degree));
-      y = (constY - distance*sind(180-degree));
+      x = (constX + distance*sind(180-degree));
+      y = (constY - distance*cosd(180-degree));
     end
   end
 

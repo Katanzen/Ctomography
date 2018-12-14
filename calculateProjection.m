@@ -13,27 +13,28 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
   numberOfHitArray = zeros(1 , numberofdetectors);
   halfTheImageSize = imagesize;
   data = 0;
+  doksanderece=zeros(1,100);
+  doksan1derece=zeros(2,100);
   for k = 1:numberofdetectors
-%       if(degree==45)
-%             disp(reference_points(1,k));
-%             disp(reference_points(2,k));
-%             disp(xpoint);
-%             disp("+++++++");
-%             disp(ypoint);
-%         end
     for i = 1:samples
       [xpoint, ypoint] = find_point_cordinates(reference_points(1, k), reference_points(2, k), samplearray(i), degree);
        attenuation = calculateProjectionData(xpoint, ypoint);
-%         if(degree==45 && k==1)
-% %             disp(reference_points(1,k));
-% %             disp(reference_points(2,k));
-%             disp(xpoint);
-%             disp("+++++++");
-%             disp(ypoint);
-%             disp("+++++++");
-%             disp(attenuation);
-%             disp("END");
-%         end
+       if(degree==90 && k==5)
+%            disp(samplearray(i));
+%            disp(xpoint);
+%            disp(ypoint);
+%            disp(attenuation);
+       end
+       
+    end
+%     disp(attenuation);
+    if(degree==1 && k==6)
+%         disp("laal");
+%         disp(numberofhits);
+%         disp(reference_points(:,k));
+%         disp(attenuation);
+%         disp(xpoint);
+%         disp(ypoint);
     end
     numberOfHitArray(1,k) = numberofhits;
 
@@ -52,6 +53,7 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
   end
 
   function pdata = calculateProjectionData(xpoint_line, ypoint_line)
+    
     if(xpoint_line > -imagesize && xpoint_line < imagesize && ypoint_line > -imagesize && ypoint_line <imagesize)
 
       numberofhits = numberofhits + 1;
@@ -73,5 +75,4 @@ function [outputMatrix, numberOfHitArray] = myFun(image, reference_points, degre
     end
     pdata = data;
   end
-
 end
