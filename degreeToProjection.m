@@ -14,16 +14,19 @@ function [arrayOf, backProjectedImageRe, filteredBackProjectionRe] = degreeToPro
     % backProjectedImageRe = zeros(sizeOfImage, sizeOfImage);
     
 %     highPassFilter = ones(10,1);
-    highPassFilter(:,1) = [1, 1, 2, 3, 5, 5, 3, 2, 1, 1];
-    
+    highPassFilter(:,1) = [1, 1, 2, 3, 4.5, 4.5, 3, 2, 1, 1];
+%     highPassFilter(:,1) = [5, 3, 2, 1,1,1, 1, 2, 3, 5];
+%     highPassFilter(:,1) = [1,2,3,4,5,6,7,8,9,10];
 %     for i=1:10
 %         if(i<=5)
-%             highPassFilter(i,1) =  highPassFilter(i,1) * (20/sqrt(i));
+%             highPassFilter(i,1) =  highPassFilter(i,1) * (i*i)/5;
 %         else
-%             highPassFilter(i,1) =  highPassFilter(i,1) * (i*i*i)/50;
+%             highPassFilter(i,1) =  highPassFilter((11-i),1);
 %         end
 %     end
-    disp(highPassFilter);    
+%     highPassFilter(1,1) = 1;
+%     highPassFilter(10,1) = 1;
+%     disp(highPassFilter);    
 %     highPassFilter = linspace(1,3,10);
 
     degreeJump = floor(180/numberOfSamples);

@@ -4,7 +4,7 @@
 function filteredBackProjectedImageRe = Filteredbackprojection(filteredbackProjectedImage, imagesizeR2, projectionData2, ~, numberOfSamplesOnRays, numberofdetectors, degree, numberOfHitArray, reference_points, originPoint, indexForProjectionData, highPassFilter)
   samplearray = linspace(-originPoint, originPoint, 100);
   halfTheImageSize2 = imagesizeR2 / 2 ;
-  projectionData2 = (abs(ifft(fft(projectionData2).* highPassFilter)));
+  projectionData2 = (abs(ifft((fft(projectionData2)).* highPassFilter)));
   for k = 1:numberofdetectors
     numberOfHitsToSend = numberOfHitArray(1,k);
     for i = 1:numberOfSamplesOnRays

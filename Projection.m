@@ -23,19 +23,19 @@ lengthBetweenSensors = lengthOfSensorPanel / detectionSensors;
 
 
 % backProjectedImage = backProjectedImage /(sizeOfImage* sqrt(2));
-disp(backProjectedImage);
+% disp(backProjectedImage);
 
-disp((filteredBackProjection));
+% disp((filteredBackProjection));
 figure;
 subplot(2,2,1);
-title("Ýlk foto");
 imagesc(image);
+title("Image");
 subplot(2,2,2);
-title("Projection");
 imagesc(projectionArray);
+title("Projection");
 subplot(2,2,3);
-title("BackProjected Image");
 imagesc(backProjectedImage);
+title("BackProjected Image");
 subplot(2,2,4);
-title("FilteredBackProjection Image");
 imagesc(filteredBackProjection);
+title("FilteredBackProjection Image");
