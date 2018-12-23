@@ -13,17 +13,31 @@ function [arrayOf, backProjectedImageRe, filteredBackProjectionRe] = degreeToPro
     distanceFromOrigin = zeros(0, detectionSensors);
     % backProjectedImageRe = zeros(sizeOfImage, sizeOfImage);
     
-%     highPassFilter = ones(10,1);
-    highPassFilter(:,1) = [1, 1, 2, 3, 4.5, 4.5, 3, 2, 1, 1];
+    highPassFilter = ones(1,detectionSensors);
+    lowPassFilter = ones(1,detectionSensors);
+%     highPassFilter(:,1) = [1, 1, 2, 3, 4.5, 4.5, 3, 2, 1, 1];
 %     highPassFilter(:,1) = [5, 3, 2, 1,1,1, 1, 2, 3, 5];
 %     highPassFilter(:,1) = [1,2,3,4,5,6,7,8,9,10];
-%     for i=1:10
-%         if(i<=5)
-%             highPassFilter(i,1) =  highPassFilter(i,1) * (i*i)/5;
+%     for i=1:detectionSensors
+%         if(i<=(detectionSensors/2))
+%             highPassFilter(i,1) =  highPassFilter(i,1) * detectionSensors/(i);
 %         else
-%             highPassFilter(i,1) =  highPassFilter((11-i),1);
+%             highPassFilter(i,1) =  highPassFilter((detectionSensors + 1 - i),1);
 %         end
 %     end
+%     for i=1:detectionSensors
+%         if(i<=(detectionSensors/2))
+%             highPassFilter(i) = 1 + i/100;
+%         else
+%             highPassFilter(i) = highPassFilter(i-(detectionSensors/2));
+%         end
+%     end
+    for i=1:detectionSensors
+        highPassFilter(1,i) = 1 + i/100;
+        lowPassFilter(1,i) = 1;
+    end
+%     disp(highPassFilter);
+%     disp(lowPassFilter);
 %     highPassFilter(1,1) = 1;
 %     highPassFilter(10,1) = 1;
 %     disp(highPassFilter);    
@@ -35,7 +49,7 @@ function [arrayOf, backProjectedImageRe, filteredBackProjectionRe] = degreeToPro
     discrete_point_jump = projectionLinesLength / discretePointsInLines;
     constPointsLinesForZero = zeros(2, detectionSensors);
     projectiondata = ones(detectionSensors, numberOfSamples);
-    dataForFiltering = ones(detectionSensors, numberOfSamples);
+    dataForFiltering = ones(detectionSensors, 1);
     % Constant points of the lines are initialized in a two dimensional matrix
     % First row contains x posiitions second row contains y positions of the lines:
 
@@ -48,13 +62,16 @@ function [arrayOf, backProjectedImageRe, filteredBackProjectionRe] = degreeToPro
     for degree = 0:degreeJump:179
         referencePoints = findConstPointLines(degree);
         [projectiondata(:,indexForProjectionData), numberOfHitArray] = calculateProjection(image, referencePoints, degree, numberOfSamplesOnLines, detectionSensors, projectionLinesLength, originPoint, numberOfSamples);
-        dataForFiltering(:, indexForProjectionData) = projectiondata(:,indexForProjectionData);
-        backProjectedImage = Backprojection(backProjectedImage, sizeOfImage, projectiondata, numberOfSamples, numberOfSamplesOnLines, detectionSensors, degree, numberOfHitArray, referencePoints, originPoint, indexForProjectionData);
+        dataForFiltering(:, 1) = projectiondata(:,indexForProjectionData);
+%         disp(dataForFiltering);
+        backProjectedImage = Backprojection(backProjectedImage, sizeOfImage, projectiondata, numberOfSamples, numberOfSamplesOnLines, detectionSensors, degree, numberOfHitArray, referencePoints, originPoint, indexForProjectionData, lowPassFilter);
         backProjectedImageRe = backProjectedImage;
         filteredBackProjectedImage =Filteredbackprojection(filteredBackProjectedImage, sizeOfImage, dataForFiltering, numberOfSamples, numberOfSamplesOnLines, detectionSensors, degree, numberOfHitArray, referencePoints, originPoint, indexForProjectionData, highPassFilter);
         filteredBackProjectionRe = filteredBackProjectedImage;
         indexForProjectionData = indexForProjectionData + 1;
-
+%         disp(dataForFiltering);
+        dataForFiltering(:,1) = 0;
+        
     end
     
     arrayOf = projectiondata;

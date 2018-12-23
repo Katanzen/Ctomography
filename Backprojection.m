@@ -1,11 +1,23 @@
 % 
 %  Takes projection data as input and outputs backprojection data.
 % 
-function backProjectedImageRe = Backprojection(backProjectedImage, imagesizeR, projectionData, ~, numberOfSamplesOnRays, numberofdetectors, degree, numberOfHitArray, reference_points, originPoint, indexForProjectionData)
+function backProjectedImageRe = Backprojection(backProjectedImage, imagesizeR, projectionData, ~, numberOfSamplesOnRays, numberofdetectors, degree, numberOfHitArray, reference_points, originPoint, indexForProjectionData, lowPassFilter)
   samplearray = linspace(-originPoint, originPoint, 100);
   halfTheImageSize = imagesizeR / 2 ;
+    temp_data1 = ones(1,numberofdetectors);
+%   disp(highPassFilter);
+  for i=1:numberofdetectors
+      temp_data1(1,i) = projectionData(i,indexForProjectionData);
+  end
+  temp_data1 = (real(ifft((fft(temp_data1)).* lowPassFilter)));
+   for i=1:numberofdetectors
+      projectionData(i,indexForProjectionData) = temp_data1(1,i);
+  end
   for k = 1:numberofdetectors
     numberOfHitsToSend = numberOfHitArray(1,k);
+%     if(degree==45)
+%         disp(numberOfHitsToSend);
+%     end
     for i = 1:numberOfSamplesOnRays
       [xpoint, ypoint] = find_point_cordinates(reference_points(1, k), reference_points(2, k), samplearray(i), degree);
       calculateBackProjectionData(xpoint, ypoint, numberOfHitsToSend, k);

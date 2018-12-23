@@ -4,7 +4,16 @@
 function filteredBackProjectedImageRe = Filteredbackprojection(filteredbackProjectedImage, imagesizeR2, projectionData2, ~, numberOfSamplesOnRays, numberofdetectors, degree, numberOfHitArray, reference_points, originPoint, indexForProjectionData, highPassFilter)
   samplearray = linspace(-originPoint, originPoint, 100);
   halfTheImageSize2 = imagesizeR2 / 2 ;
-  projectionData2 = (abs(ifft((fft(projectionData2)).* highPassFilter)));
+  temp_data = ones(1,numberofdetectors);
+%   disp(highPassFilter);
+  for i=1:numberofdetectors
+      temp_data(1,i) = projectionData2(i,1);
+  end
+  temp_data = (real(ifft((fft(temp_data)).* highPassFilter)));
+   for i=1:numberofdetectors
+      projectionData2(i,1) = temp_data(1,i);
+  end
+%   disp(projectionData2);
   for k = 1:numberofdetectors
     numberOfHitsToSend = numberOfHitArray(1,k);
     for i = 1:numberOfSamplesOnRays
@@ -33,11 +42,11 @@ function filteredBackProjectedImageRe = Filteredbackprojection(filteredbackProje
 
       if(degree == 0)
 
-        filteredbackProjectedImage(floredx2, floredy2) =(projectionData2(index2, indexForProjectionData)/(imagesizeR2*sqrt(2)*(numberOfHits2/100)));
+        filteredbackProjectedImage(floredx2, floredy2) =(projectionData2(index2, 1)/(imagesizeR2*sqrt(2)*(numberOfHits2/100)));
 
       else
 
-          filteredbackProjectedImage(floredx2, floredy2) = filteredbackProjectedImage(floredx2, floredy2)+ projectionData2(index2, indexForProjectionData)/((imagesizeR2*sqrt(2)*numberOfHits2/100));
+          filteredbackProjectedImage(floredx2, floredy2) = filteredbackProjectedImage(floredx2, floredy2)+ projectionData2(index2, 1)/((imagesizeR2*sqrt(2)*numberOfHits2/100));
       end
 
     end
