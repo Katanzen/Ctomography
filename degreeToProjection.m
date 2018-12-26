@@ -33,8 +33,17 @@ function [arrayOf, backProjectedImageRe, filteredBackProjectionRe] = degreeToPro
 %         end
 %     end
     for i=1:detectionSensors
-        highPassFilter(1,i) = 1 + i/100;
-        lowPassFilter(1,i) = 1;
+%         disp(floor(detectionSensors/4));
+        if(i>=ceil(detectionSensors/4) && i<=ceil(detectionSensors/2))
+%             disp(i);
+            highPassFilter(i) = 1 + 2.7*i;
+        elseif(i> ceil(detectionSensors/2) && i<=(ceil(3*detectionSensors/4) + 1))
+%             disp();
+            highPassFilter(i) = highPassFilter( 2*ceil(detectionSensors/2) - i);
+        end
+%         highPassFilter(1,i) = 1 + i/100;
+%         lowPassFilter(1,i) = 1;
+        
     end
 %     disp(highPassFilter);
 %     disp(lowPassFilter);

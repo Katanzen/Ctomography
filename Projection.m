@@ -7,7 +7,7 @@ image(4,4) = 10;
 image(5,3) = 10;
 image(5,4) = 10;
 numberOfSamples = 180;
-detectionSensors = 25;
+detectionSensors = 200;
 
 %Size of the one dimension, assumes matrix is square:
 sizeOfImage = size(image);
